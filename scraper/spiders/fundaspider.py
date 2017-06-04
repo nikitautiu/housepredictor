@@ -4,6 +4,7 @@ import json
 import scrapy
 from scrapy import Request
 
+from scraper.helpers import flatten
 from scraper.items import FundaItem
 
 
@@ -75,9 +76,16 @@ class FundaApiSpider(scrapy.Spider):
     def parse_detail(self, response):
         """Parses a page view of property and returns it's content and
         the list data received through the meta"""
+        posting = response.meta['list_posting']
         json_response = json.loads(response.body_as_unicode())  # parse json
-        return FundaItem(list=response.meta['list_posting'],
-                         detail=json_response)
+        posting.update(json_response)
+
+        # flatten the data and extract the id
+        item_data = flatten(posting)
+
+        return FundaItem(id=item_data['GlobalId'],
+                         type=self.search_args['type'],
+                         data=item_data)
 
     def parse(self, response):
         json_response = json.loads(response.body_as_unicode())
