@@ -4,23 +4,24 @@ import json
 import scrapy
 from scrapy import Request
 
-from scraper.helpers import flatten
-from scraper.items import FundaItem
+from housepredictor.scraper.items import FundaItem
 
 
-def get_search_url(api_key='16F03929-0DB2-4FA7-8B55-182D9B20404A', type='koop',
-                   zone='heel-nederland', page=1, page_size=25):
+def get_search_url(api_key='16F03929-0DB2-4FA7-8B55-182D9B20404A',
+                   type='koop', zone='heel-nederland',
+                   page=1, page_size=25):
     """Returns a funda search url for the given arguments
 
     :param api_key: the api key to use for funda. the default one is for the
     mobile app
-    :param type: the type of the listings. Currently can be `koop` or `huur`
+    :param type: the type of the listings. Currently can be `koop` or
+    `huur`
     :param zone: the zone to search. default
     :param page: the result page
     :param page_size: the size of the pages, currently the maximum is 25"""
     url_template = 'http://partnerapi.funda.nl/feeds/Aanbod.svc/{' \
-                   'api_key}/?type={type}&zo={query}&page={page}&page_size={' \
-                   'page_size}&website=funda'
+                   'api_key}/?type={type}&zo={query}&page={' \
+                   'page}&page_size={page_size}&website=funda'
     query = '/{zone}/'.format(zone=zone)
     format_args = {
         'api_key': api_key,
@@ -32,26 +33,22 @@ def get_search_url(api_key='16F03929-0DB2-4FA7-8B55-182D9B20404A', type='koop',
     return url_template.format(**format_args)
 
 
-def get_detail_url(id, api_key='16F03929-0DB2-4FA7-8B55-182D9B20404A',
+def get_detail_url(listing_id, api_key='16F03929-0DB2-4FA7-8B55-182D9B20404A',
                    type='koop'):
-    """Returns the page detail for the given id"""
+    """Returns the page detail for the given listing_id"""
 
     url_template = 'http://partnerapi.funda.nl/feeds/Aanbod.svc/detail' \
-                   '/{api_key}/{type}/globalid/{id}/'
+                   '/{api_key}/{type}/globalid/{listing_id}/'
     format_args = {
         'api_key': api_key,
         'type': type,
-        'id': id
+        'listing_id': listing_id
     }
     return url_template.format(**format_args)
 
 
-class FundaApiSpider(scrapy.Spider):
-    name = 'fundaapispider'
-    custom_settings = {
-        # taken from the mobile api
-        'USER_AGENT': 'Apache-HttpClient/UNAVAILABLE (java 1.4)'
-    }
+class FundaSpider(scrapy.Spider):
+    name = 'fundaspider'
 
     def __init__(self, *args, **kwargs):
         """Initializes the spider.
@@ -80,15 +77,13 @@ class FundaApiSpider(scrapy.Spider):
         json_response = json.loads(response.body_as_unicode())  # parse json
         posting.update(json_response)
 
-        # flatten the data and extract the id
-        item_data = flatten(posting)
-
-        return FundaItem(id=item_data['GlobalId'],
+        return FundaItem(id=posting['GlobalId'],
                          type=self.search_args['type'],
-                         data=item_data)
+                         data=posting)
 
     def parse(self, response):
         json_response = json.loads(response.body_as_unicode())
+        # deal with the paging
         total_pages = json_response['Paging']['AantalPaginas']
         current_page = json_response['Paging']['HuidigePagina']
 
@@ -111,7 +106,8 @@ class FundaApiSpider(scrapy.Spider):
     def build_detail_request(self, global_id):
         """Returns a request for the detail page of a property
         :param global_id: the i of the posting"""
-        detail_url = get_detail_url(id=global_id, type=self.search_args['type'],
+        detail_url = get_detail_url(listing_id=global_id,
+                                    type=self.search_args['type'],
                                     api_key=self.search_args['api_key'])
         return Request(detail_url,
                        callback=self.parse_detail)

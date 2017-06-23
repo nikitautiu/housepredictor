@@ -2,12 +2,12 @@ from distutils.core import setup
 
 setup(
     name='housepredictor',
-    version='',
-    packages=['', 'spiders'],
-    package_dir={'': 'scraper'},
+    version='0.1.0',
+    packages=['', 'scraper', 'scraper.spiders'],
+    package_dir={'': 'housepredictor'},
     url='',
     license='',
-    author='nikitautiu',
+    author='Nichita Utiu',
     author_email='nikita.utiu@gmail.com',
-    description='Funda scraper and predictor'
+    description='funda.nl scraper and predictor suite'
 )

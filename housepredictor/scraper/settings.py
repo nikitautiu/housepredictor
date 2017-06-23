@@ -11,8 +11,8 @@
 
 BOT_NAME = 'scraper'
 
-SPIDER_MODULES = ['scraper.spiders']
-NEWSPIDER_MODULE = 'scraper.spiders'
+SPIDER_MODULES = ['housepredictor.scraper.spiders']
+NEWSPIDER_MODULE = 'housepredictor.scraper.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'Apache-HttpClient/UNAVAILABLE (java 1.4)'  # fro mthe api
