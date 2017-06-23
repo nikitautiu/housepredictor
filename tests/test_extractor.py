@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from extractor import flatten, DictExtractor, DictMultiExtractor
+from housepredictor.extractor import flatten, DictExtractor, DictMultiExtractor
 
 
 class TestFlatten(TestCase):

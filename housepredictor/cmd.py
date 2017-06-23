@@ -5,11 +5,17 @@ from scrapy.utils.project import get_project_settings
 from scraper.spiders.fundaspider import FundaSpider
 
 
+@click.group()
+def cli():
+    """housepredictor management commands"""
+    pass
+
+
 # the type of zone defaults to string due to the fact that the default
 # is a string
-@click.command()
+@cli.command()
 @click.option('--zone', default='heel-nederland',
-              help='the zone to search for postings(defaults to all of the'
+              help='the zone to search for postings(defaults to all of the '
                    'Netherlands)')
 @click.option('--type', default='koop', type=click.Choice(['koop', 'huur']),
               show_default=True, help='the type of postings')
@@ -50,4 +56,4 @@ def scrape(zone, type, format, output, logfile, loglevel):
 
 
 if __name__ == '__main__':
-    scrape()  # run the command
+    cli()  # run the group
