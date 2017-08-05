@@ -27,7 +27,7 @@ ROBOTSTXT_OBEY = True
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
 
-DOWNLOAD_DELAY = 0.66  # the api is hardacapped at around 100 requests per minute
+DOWNLOAD_DELAY = 0.62  # the api is hardacapped at around 100 requests per minute
 
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
@@ -64,9 +64,9 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-# ITEM_PIPELINES = {
-#    'scraper.pipelines.HousepredictorPipeline': 300,
-# }
+ITEM_PIPELINES = {
+    'scraper.pipelines.ExtractionPipeline': 300,
+ }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html

@@ -56,14 +56,17 @@ class FundaSpider(scrapy.Spider):
         Currently supported arguments:
             * type: `koop` or `huur`
             * zone: the zone where to search for properties
+            * api_key: the api key to use. currently the mobile app api-key
+            * all: whether to scrape all data or return just the relevant fields(not recommended)
         """
         self.search_args = {
             'type': kwargs.pop('type', 'koop'),
             'zone': kwargs.pop('zone', 'heel-nederland'),
-            'api_key': kwargs.pop('api_ley',
+            'api_key': kwargs.pop('api_key',
                                   '16F03929-0DB2-4FA7-8B55-182D9B20404A')
         }
         self.search_args.update(kwargs.pop('search_args', {}))
+        self.sanitize = kwargs.pop('sanitize', True)  # whether to scrape all, or just data fields from json
         super().__init__(*args, **kwargs)
 
     def start_requests(self):
@@ -77,9 +80,9 @@ class FundaSpider(scrapy.Spider):
         json_response = json.loads(response.body_as_unicode())  # parse json
         posting.update(json_response)
 
-        return FundaItem(id=posting['GlobalId'],
-                         type=self.search_args['type'],
-                         data=posting)
+        # data is fairly consistent across the api so no
+        # scrpy items are fairly redundant
+        return posting
 
     def parse(self, response):
         json_response = json.loads(response.body_as_unicode())
