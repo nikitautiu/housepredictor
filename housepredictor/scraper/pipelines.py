@@ -2,21 +2,8 @@ from extractor import sanitize_record
 
 
 class ExtractionPipeline(object):
-    """Pipeline that lets only the required data to go through,
-    if the --all flag is"""
-
-    collection_name = 'scrapy_items'
-
-    def __init__(self, mongo_uri, mongo_db):
-        self.mongo_uri = mongo_uri
-        self.mongo_db = mongo_db
-
-    @classmethod
-    def from_crawler(cls, crawler):
-        return cls(
-            mongo_uri=crawler.settings.get('MONGO_URI'),
-            mongo_db=crawler.settings.get('MONGO_DATABASE', 'items')
-        )
+    """Pipeline that sanitizes the items
+    if the `sanitize` flag is set in the spider."""
 
     def open_spider(self, spider):
         self.sanitize = spider.sanitize  # check the flag's state

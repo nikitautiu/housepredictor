@@ -1,0 +1,6 @@
+pandas==0.20.3
+numpy==1.13.1
+scipy==0.19.1
+Scrapy==1.4.0
+click==6.7
+scikit_learn==0.19b2
