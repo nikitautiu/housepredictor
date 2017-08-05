@@ -2,7 +2,7 @@
 House prediction app for Funda
 
 ## Running the scraper
-To run the scraper, simply install the dependencies from `requirements.txt` and run `funda-scraper.sh`. For more info on the argument, call it with `--help`. The scraper defaults to CSV, and the area of search defaults to *heel-nederland* as in
+To run the scraper, simply install the dependencies from `requirements.txt` and run `funda-scraper.sh`. For more info on the script, call it with `--help`. The scraper defaults to CSV, and the area of search defaults to *heel-nederland* as in
 [http://www.funda.nl/koop/**heel-nederland**](http://www.funda.nl/koop/heel-nederland). You can check the search urls and restrict crawling to specific areas of the Netherlands as well.
 
 ### Important note
